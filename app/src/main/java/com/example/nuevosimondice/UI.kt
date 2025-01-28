@@ -240,7 +240,7 @@ fun myApp(viewModel: MyViewModel) {
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd) // Coloca el botón en la parte inferior derecha
-                .size(85.dp), // Hacer el botón pequeño y cuadrado
+                .size(90.dp), // Hacer el botón pequeño y cuadrado
             colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray), // Color de fondo del botón
             shape = RoundedCornerShape(0.dp), // Sin bordes redondeados, forma rectangular
             enabled = isButtonEnabled // Estado del botón, habilitado o deshabilitado
