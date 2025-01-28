@@ -1,5 +1,6 @@
 package com.example.nuevosimondice
 
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import android.widget.Toast
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -130,7 +132,8 @@ fun showButtonStart(viewModel: MyViewModel){
     viewModel.estadoLiveData.observe(LocalLifecycleOwner.current) {
         _activo = viewModel.estadoLiveData.value!!.startActivo
     }
-
+    // Inicializamos MediaPlayer
+    val mediaPlayer = MediaPlayer.create(LocalContext.current, R.raw.discord)
 
     val rosa = Color(0xFFFF00C9)
     Column(verticalArrangement = Arrangement.Center,
@@ -141,7 +144,11 @@ fun showButtonStart(viewModel: MyViewModel){
     {
         Button(
             enabled = _activo,
-            onClick = { viewModel.setRandom() },
+            onClick = { viewModel.setRandom()
+                // Reproducir sonido cuando se presiona el botón
+                mediaPlayer.start()
+                      },
+
             colors = ButtonDefaults.buttonColors(
                 containerColor = rosa,
                 contentColor = Color.Black
@@ -154,7 +161,9 @@ fun showButtonStart(viewModel: MyViewModel){
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold)
 
-        }    }
+        }
+    }
+
 }
 /**
  * app principal del juego
@@ -209,6 +218,38 @@ fun myApp(viewModel: MyViewModel) {
             showRondas(rondas)
             showButtonStart(viewModel)
         }
-    }
 
+        // Aqui me tome una licencia por que me parecio muy chulo el MediaPlayer y puse otro boton para poner musicote------
+        // Estado para habilitar o deshabilitar el botón Doom
+        var isButtonEnabled by remember { mutableStateOf(true) }
+
+        // Crea el mediaPlayer para reproducir el sonido "doom"
+        val mediaPlayerDoom = MediaPlayer.create(LocalContext.current, R.raw.doom)
+
+        // Configura un listener para volver a habilitar el botón cuando termine la reproducción
+        mediaPlayerDoom.setOnCompletionListener {
+            isButtonEnabled = true // Habilita el botón cuando termine de sonar
+        }
+
+        Button(
+            onClick = {
+                if (isButtonEnabled) { // Solo permite iniciar el sonido si el botón está habilitado
+                    mediaPlayerDoom.start()
+                    isButtonEnabled = false // Deshabilita el botón al iniciar el sonido
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd) // Coloca el botón en la parte inferior derecha
+                .size(85.dp), // Hacer el botón pequeño y cuadrado
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray), // Color de fondo del botón
+            shape = RoundedCornerShape(0.dp), // Sin bordes redondeados, forma rectangular
+            enabled = isButtonEnabled // Estado del botón, habilitado o deshabilitado
+        ) {
+            Text(
+                text = "Doom", // El texto que aparecerá en el botón
+                color = Color.White, // Color del texto
+                fontWeight = FontWeight.Bold // Texto en negrita
+            )
+        }
+    }
 }
