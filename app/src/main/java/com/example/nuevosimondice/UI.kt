@@ -1,5 +1,6 @@
 package com.example.nuevosimondice
 
+import android.app.Activity
 import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -184,9 +185,7 @@ fun myApp(viewModel: MyViewModel) {
     val colorAzul by viewModel.colorAzulLiveData.observeAsState(viewModel.getColorBlue())
     val colorAmarillo by viewModel.colorAmarilloLiveData.observeAsState(viewModel.getColorYellow())
 
-    Box (modifier = Modifier
-        .fillMaxSize()
-    ){
+    Box(modifier = Modifier.fillMaxSize()) {
         val backgroundImage = painterResource(id = R.drawable.daniel)
         Image(
             painter = backgroundImage,
@@ -199,7 +198,6 @@ fun myApp(viewModel: MyViewModel) {
             showAciertos(aciertos)
         }
         Column(
-
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -207,7 +205,6 @@ fun myApp(viewModel: MyViewModel) {
                 .padding(top = 190.dp, start = 15.dp)
         ) {
             Row {
-
                 buttonColor(viewModel, lista_colores, viewModel.getRandom(), Colores.ROJO.valorColor, colorRojo)
                 buttonColor(viewModel, lista_colores, viewModel.getRandom(), Colores.VERDE.valorColor, colorVerde)
             }
@@ -219,36 +216,50 @@ fun myApp(viewModel: MyViewModel) {
             showButtonStart(viewModel)
         }
 
-        // Aqui me tome una licencia por que me parecio muy chulo el MediaPlayer y puse otro boton para poner musicote------
-        // Estado para habilitar o deshabilitar el botón Doom
+        // Aquí el MediaPlayer para música
         var isButtonEnabled by remember { mutableStateOf(true) }
-
-        // Crea el mediaPlayer para reproducir el sonido "doom"
         val mediaPlayerDoom = MediaPlayer.create(LocalContext.current, R.raw.doom)
-
-        // Configura un listener para volver a habilitar el botón cuando termine la reproducción
         mediaPlayerDoom.setOnCompletionListener {
-            isButtonEnabled = true // Habilita el botón cuando termine de sonar
+            isButtonEnabled = true
         }
 
         Button(
             onClick = {
-                if (isButtonEnabled) { // Solo permite iniciar el sonido si el botón está habilitado
+                if (isButtonEnabled) {
                     mediaPlayerDoom.start()
-                    isButtonEnabled = false // Deshabilita el botón al iniciar el sonido
+                    isButtonEnabled = false
                 }
             },
             modifier = Modifier
-                .align(Alignment.BottomEnd) // Coloca el botón en la parte inferior derecha
-                .size(90.dp), // Hacer el botón pequeño y cuadrado
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray), // Color de fondo del botón
-            shape = RoundedCornerShape(0.dp), // Sin bordes redondeados, forma rectangular
-            enabled = isButtonEnabled // Estado del botón, habilitado o deshabilitado
+                .align(Alignment.BottomEnd)
+                .size(90.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+            shape = RoundedCornerShape(0.dp),
+            enabled = isButtonEnabled
         ) {
             Text(
-                text = "Doom", // El texto que aparecerá en el botón
-                color = Color.White, // Color del texto
-                fontWeight = FontWeight.Bold // Texto en negrita
+                text = "Doom",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        // Botón para salir de la aplicación(pasaban cosas con la musica sino)
+        val contextSalir = LocalContext.current
+        Button(
+            onClick = {
+                // Verifica si el contexto es de una actividad y la cierra
+                (contextSalir as? Activity)?.finish()
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                text = "Salir",
+                color = Color.White
             )
         }
     }
