@@ -1,4 +1,4 @@
-### 1. **Inicio del Juego (UI inicia el flujo)**
+### 1. **Inicio del Juego (UI inicia el flujo)** 	:sweat:
 
 - **UI**: La pantalla de inicio muestra el estado inicial del juego y puede mostrar un botón para comenzar.
 - **`MyViewModel`**: Cuando el usuario pulsa el botón de inicio, se activa el método `setRandom()` del `ViewModel`.
