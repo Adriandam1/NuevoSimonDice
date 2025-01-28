@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import android.widget.Toast
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.Button
@@ -28,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,6 +77,8 @@ fun RecordMaximo(record:Int){
 @Composable
 fun buttonColor(viewModel: MyViewModel, listaColores: MutableList<Int>, lista_Random:MutableList<Int>, colorValor:Int, color: Color){
 
+    val context = LocalContext.current // Obtener el contexto actual
+
     var _activo by remember { mutableStateOf(viewModel.estadoLiveData.value!!.botonesColoresActivos) }
 
     viewModel.estadoLiveData.observe(LocalLifecycleOwner.current) {
@@ -84,7 +88,7 @@ fun buttonColor(viewModel: MyViewModel, listaColores: MutableList<Int>, lista_Ra
     Button(
         enabled = _activo,
         onClick = {
-            viewModel.addColor(colorValor,listaColores, lista_Random)
+            viewModel.addColor(context, colorValor,listaColores, lista_Random)
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = color,

@@ -1,6 +1,8 @@
 package com.example.nuevosimondice
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -112,11 +114,11 @@ class MyViewModel(): ViewModel() {
         Log.d("Random", Datos.listaNumerosRandom.toString())
     }
 
-    fun addColor(numero:Int, listaColoresR: MutableList<Int>, lista_Random:MutableList<Int>){
+    fun addColor(context: Context, numero:Int, listaColoresR: MutableList<Int>, lista_Random:MutableList<Int>){
 
         listaColoresR.add(numero)
         Datos.listaColores = listaColoresR
-        winOrLose(lista_Random, listaColoresR)
+        winOrLose(context, lista_Random, listaColoresR)
 
     }
 
@@ -150,15 +152,17 @@ class MyViewModel(): ViewModel() {
      * logica para saber si el usuario ganó o perdió la partida
      */
 
-    fun winOrLose(lista_Random: MutableList<Int>, listaColores: MutableList<Int>){
+    fun winOrLose(context: Context, lista_Random: MutableList<Int>, listaColores: MutableList<Int>){
         if(listaColores.size <= lista_Random.size){
-            auxWinOrLose(lista_Random, listaColores)
+            auxWinOrLose(context, lista_Random, listaColores)
         }
     }
 
-    private fun auxWinOrLose(lista_Random:MutableList<Int>,listaColores:MutableList<Int>){
+    private fun auxWinOrLose(context: Context, lista_Random:MutableList<Int>, listaColores:MutableList<Int>){
         if(lista_Random == listaColores){
             onWin(listaColores)
+            // Usa el context proporcionado para mostrar el Toast
+            Toast.makeText(context, "¡Has ganado! ¡Continúa jugando!", Toast.LENGTH_SHORT).show()
             Log.d("random", "ganaste")
             Log.d("randomRe", getRecord().toString())
             Log.d("randomAc", getAciertos().toString())
@@ -168,6 +172,9 @@ class MyViewModel(): ViewModel() {
             Log.d("TAG", "CORRECTO")
         }
         else{
+            // Mensaje de Toast para cuando el jugador pierda
+            Toast.makeText(context, "Perdiste. Intenta de nuevo.", Toast.LENGTH_SHORT).show()
+
             Log.d("random", "perdiste")
             onLose(listaColores)
         }
